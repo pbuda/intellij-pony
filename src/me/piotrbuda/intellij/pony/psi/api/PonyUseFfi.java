@@ -1,16 +1,16 @@
 // This is a generated file. Not intended for manual editing.
 package me.piotrbuda.intellij.pony.psi.api;
 
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface PonyUseFfi extends PsiElement {
 
-    @Nullable
-    PonyParams getParams();
+  @Nullable
+  PonyParams getParams();
 
-    @NotNull
-    PonyTypeargs getTypeargs();
+  @NotNull
+  PonyTypeargs getTypeargs();
 
 }

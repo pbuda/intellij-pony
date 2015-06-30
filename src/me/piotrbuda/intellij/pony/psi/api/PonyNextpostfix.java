@@ -1,26 +1,25 @@
 // This is a generated file. Not intended for manual editing.
 package me.piotrbuda.intellij.pony.psi.api;
 
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.psi.PsiElement;
 
 public interface PonyNextpostfix extends PsiElement {
 
-    @NotNull
-    List<PonyCall> getCallList();
+  @NotNull
+  List<PonyCall> getCallList();
 
-    @NotNull
-    List<PonyDot> getDotList();
+  @NotNull
+  List<PonyDot> getDotList();
 
-    @NotNull
-    PonyNextatom getNextatom();
+  @NotNull
+  PonyNextatom getNextatom();
 
-    @NotNull
-    List<PonyTilde> getTildeList();
+  @NotNull
+  List<PonyTilde> getTildeList();
 
-    @NotNull
-    List<PonyTypeargs> getTypeargsList();
+  @NotNull
+  List<PonyTypeargs> getTypeargsList();
 
 }

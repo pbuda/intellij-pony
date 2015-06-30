@@ -1,42 +1,43 @@
 // This is a generated file. Not intended for manual editing.
 package me.piotrbuda.intellij.pony.psi.api;
 
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
 public interface PonyNextatom extends PsiElement {
 
-    @Nullable
-    PonyLiteral getLiteral();
+  @Nullable
+  PonyLiteral getLiteral();
 
-    @Nullable
-    PonyMembers getMembers();
+  @Nullable
+  PonyMembers getMembers();
 
-    @Nullable
-    PonyNamed getNamed();
+  @Nullable
+  PonyNamed getNamed();
 
-    @Nullable
-    PonyParams getParams();
+  @Nullable
+  PonyParams getParams();
 
-    @Nullable
-    PonyPositional getPositional();
+  @Nullable
+  PonyPositional getPositional();
 
-    @Nullable
-    PonyRawseq getRawseq();
+  @Nullable
+  PonyRawseq getRawseq();
 
-    @Nullable
-    PonyTuple getTuple();
+  @Nullable
+  PonyTuple getTuple();
 
-    @Nullable
-    PonyType getType();
+  @Nullable
+  PonyType getType();
 
-    @Nullable
-    PonyTypeargs getTypeargs();
+  @Nullable
+  PonyTypeargs getTypeargs();
 
-    @Nullable
-    PonyTypeparams getTypeparams();
+  @Nullable
+  PonyTypeparams getTypeparams();
 
-    @Nullable
-    PonyTypes getTypes();
+  @Nullable
+  PonyTypes getTypes();
 
 }

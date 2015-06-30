@@ -1,15 +1,16 @@
 // This is a generated file. Not intended for manual editing.
 package me.piotrbuda.intellij.pony.psi.api;
 
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
 public interface PonyNosemi extends PsiElement {
 
-    @Nullable
-    PonyJump getJump();
+  @Nullable
+  PonyJump getJump();
 
-    @Nullable
-    PonyNextexprseq getNextexprseq();
+  @Nullable
+  PonyNextexprseq getNextexprseq();
 
 }
