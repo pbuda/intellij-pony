@@ -1,0 +1,12 @@
+<idea-plugin version="2">
+  <id>me.piotrbuda.intellij.pony</id>
+  <name>Pony</name>
+  <description>Plugin for Pony language support</description>
+  <version>0.1.0</version>
+  <vendor email="pony@piotrbuda.me">Piotr Buda</vendor>
+  <change-notes/>
+  <idea-version since-build="141.178"/>
+
+  <extensions defaultExtensionNs="com.intellij">
+  </extensions>
+</idea-plugin>
