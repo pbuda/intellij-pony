@@ -26,6 +26,10 @@
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="me.piotrbuda.intellij.pony.PonyFileTypeFactory"/>
 
+    <!-- project wizard -->
+    <moduleBuilder builderClass="me.piotrbuda.intellij.pony.project.PonyModuleBuilder" id="PONY_STEP" order="first"/>
+    <moduleType id="PONY_MODULE_TYPE" implementationClass="me.piotrbuda.intellij.pony.project.PonyModuleType"/>
+
     <framework.type implementation="me.piotrbuda.intellij.pony.framework.PonyFramework"/>
   </extensions>
 </idea-plugin>
