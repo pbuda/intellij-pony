@@ -25,5 +25,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="me.piotrbuda.intellij.pony.PonyFileTypeFactory"/>
+
+    <framework.type implementation="me.piotrbuda.intellij.pony.framework.PonyFramework"/>
   </extensions>
 </idea-plugin>
