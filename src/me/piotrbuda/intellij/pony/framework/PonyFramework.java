@@ -18,6 +18,7 @@ package me.piotrbuda.intellij.pony.framework;
 
 import com.intellij.framework.FrameworkTypeEx;
 import com.intellij.framework.addSupport.FrameworkSupportInModuleProvider;
+import com.intellij.icons.AllIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,12 +39,12 @@ public class PonyFramework extends FrameworkTypeEx {
     @NotNull
     @Override
     public String getPresentableName() {
-        return null;
+        return "Pony";
     }
 
     @NotNull
     @Override
     public Icon getIcon() {
-        return null;
+        return AllIcons.General.Information;
     }
 }
