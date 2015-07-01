@@ -19,17 +19,22 @@ package me.piotrbuda.intellij.pony.project;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.vfs.VirtualFile;
 
 public class PonyModuleBuilder extends ModuleBuilder {
     @Override
     public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
-
+        final VirtualFile projectBaseDir = modifiableRootModel.getProject().getBaseDir();
+        final ContentEntry contentEntry = modifiableRootModel.addContentEntry(projectBaseDir);
+        contentEntry.addSourceFolder(projectBaseDir, false);
     }
 
     @Override
     public ModuleType getModuleType() {
         return PonyModuleType.getInstance();
     }
+
 
 }
