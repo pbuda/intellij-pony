@@ -33,5 +33,13 @@
         <sdkType implementation="me.piotrbuda.intellij.pony.sdk.PonySdkType"/>
 
         <configurationType implementation="me.piotrbuda.intellij.pony.runner.PonyRunConfigurationType"/>
+
+        <programRunner implementation="me.piotrbuda.intellij.pony.runner.PonyRunner"/>
+
+        <!-- settings -->
+        <moduleConfigurationEditorProvider implementation="me.piotrbuda.intellij.pony.settings.PonyModuleConfigurationEditor" order="first"/>
+
+        <!-- external builder support -->
+        <compileServer.plugin classpath="jps-plugin.jar"/>
     </extensions>
 </idea-plugin>
