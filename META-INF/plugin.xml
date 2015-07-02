@@ -31,5 +31,7 @@
                        order="first"/>
         <moduleType id="PONY_MODULE_TYPE" implementationClass="me.piotrbuda.intellij.pony.project.PonyModuleType"/>
         <sdkType implementation="me.piotrbuda.intellij.pony.sdk.PonySdkType"/>
+
+        <configurationType implementation="me.piotrbuda.intellij.pony.runner.PonyRunConfigurationType"/>
     </extensions>
 </idea-plugin>
