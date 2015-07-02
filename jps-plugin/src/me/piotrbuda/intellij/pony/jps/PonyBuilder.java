@@ -16,6 +16,8 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
+import com.intellij.execution.ExecutionException;
+import me.piotrbuda.intellij.pony.jps.model.PonyJpsModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.ModuleChunk;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
@@ -25,7 +27,12 @@ import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.ModuleBuildTarget;
 import org.jetbrains.jps.incremental.ModuleLevelBuilder;
 import org.jetbrains.jps.incremental.ProjectBuildException;
+import org.jetbrains.jps.incremental.messages.BuildMessage;
+import org.jetbrains.jps.incremental.messages.CompilerMessage;
+import org.jetbrains.jps.incremental.messages.ProgressMessage;
+import org.jetbrains.jps.model.module.JpsModule;
 
+import java.io.File;
 import java.io.IOException;
 
 public class PonyBuilder extends ModuleLevelBuilder {
@@ -39,12 +46,32 @@ public class PonyBuilder extends ModuleLevelBuilder {
                           final ModuleChunk moduleChunk,
                           final DirtyFilesHolder<JavaSourceRootDescriptor, ModuleBuildTarget> dirtyFilesHolder,
                           final OutputConsumer outputConsumer) throws ProjectBuildException, IOException {
-        return null;
+        try {
+            for (final JpsModule jpsModule : moduleChunk.getModules()) {
+                if (!jpsModule.getModuleType().equals(PonyJpsModuleType.INSTANCE)) {
+                    continue;
+                }
+
+                final String moduleRoot = jpsModule.getContentRootsList().getUrls().get(0).substring("file://".length());
+                final PonyJspInterface pony = new PonyJspInterface(new File(moduleRoot + "/main.pony"));
+                compileContext.processMessage(new ProgressMessage("Pony build"));
+                compileContext.processMessage(new CompilerMessage("Pony", BuildMessage.Kind.INFO, "Starting Pony build"));
+
+                final Process process = pony.runBuild();
+                if (process.waitFor() != 0) {
+                    compileContext.processMessage(new CompilerMessage("Pony", BuildMessage.Kind.ERROR, "Compilation errors"));
+                }
+            }
+            return ExitCode.OK;
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ExitCode.ABORT;
     }
 
     @NotNull
     @Override
     public String getPresentableName() {
-        return null;
+        return "Pony builder";
     }
 }
