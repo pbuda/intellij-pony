@@ -17,7 +17,7 @@
 package me.piotrbuda.intellij.pony.jps;
 
 import com.intellij.execution.ExecutionException;
-import me.piotrbuda.intellij.pony.jps.model.PonyJpsModuleType;
+import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.ModuleChunk;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
@@ -48,7 +48,7 @@ public class PonyBuilder extends ModuleLevelBuilder {
                           final OutputConsumer outputConsumer) throws ProjectBuildException, IOException {
         try {
             for (final JpsModule jpsModule : moduleChunk.getModules()) {
-                if (!jpsModule.getModuleType().equals(PonyJpsModuleType.INSTANCE)) {
+                if (!jpsModule.getModuleType().equals(JpsPonyModuleType.INSTANCE)) {
                     continue;
                 }
 

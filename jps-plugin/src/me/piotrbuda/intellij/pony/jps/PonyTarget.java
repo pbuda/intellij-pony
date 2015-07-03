@@ -16,6 +16,8 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
+import com.intellij.util.containers.ContainerUtil;
+import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.builders.*;
@@ -24,11 +26,15 @@ import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.indices.IgnoredFileIndex;
 import org.jetbrains.jps.indices.ModuleExcludeIndex;
 import org.jetbrains.jps.model.JpsModel;
+import org.jetbrains.jps.model.java.JavaSourceRootProperties;
+import org.jetbrains.jps.model.java.JavaSourceRootType;
+import org.jetbrains.jps.model.java.JpsJavaClasspathKind;
+import org.jetbrains.jps.model.java.JpsJavaExtensionService;
 import org.jetbrains.jps.model.module.JpsModule;
+import org.jetbrains.jps.model.module.JpsTypedModuleSourceRoot;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class PonyTarget extends ModuleBasedTarget<PonySourceRootDescriptor> {
 
@@ -43,35 +49,52 @@ public class PonyTarget extends ModuleBasedTarget<PonySourceRootDescriptor> {
 
     @Override
     public String getId() {
-        return null;
+        return myModule.getName();
     }
 
     @Override
     public Collection<BuildTarget<?>> computeDependencies(BuildTargetRegistry buildTargetRegistry, TargetOutputIndex targetOutputIndex) {
-        return null;
+        List<BuildTarget<?>> dependencies = new ArrayList<>();
+        Set<JpsModule> modules = JpsJavaExtensionService.dependencies(myModule).includedIn(JpsJavaClasspathKind.compile(isTests())).getModules();
+        for (JpsModule module : modules) {
+            if (module.getModuleType().equals(JpsPonyModuleType.INSTANCE)) {
+                dependencies.add(new PonyTarget(module, getPonyTargetType()));
+            }
+        }
+        return dependencies;
+    }
+
+    @NotNull
+    private PonyTargetType getPonyTargetType() {
+        return (PonyTargetType) getTargetType();
     }
 
     @NotNull
     @Override
     public List<PonySourceRootDescriptor> computeRootDescriptors(JpsModel jpsModel, ModuleExcludeIndex moduleExcludeIndex, IgnoredFileIndex ignoredFileIndex, BuildDataPaths buildDataPaths) {
-        return null;
+        List<PonySourceRootDescriptor> result = new ArrayList<>();
+        JavaSourceRootType type = isTests() ? JavaSourceRootType.TEST_SOURCE : JavaSourceRootType.SOURCE;
+        for (JpsTypedModuleSourceRoot<JavaSourceRootProperties> root : myModule.getSourceRoots(type)) {
+            result.add(new PonySourceRootDescriptor(root.getFile(), this));
+        }
+        return result;
     }
 
     @Nullable
     @Override
-    public PonySourceRootDescriptor findRootDescriptor(String s, BuildRootIndex buildRootIndex) {
-        return null;
+    public PonySourceRootDescriptor findRootDescriptor(@NotNull final String rootId, @NotNull final BuildRootIndex rootIndex) {
+        return ContainerUtil.getFirstItem(rootIndex.getRootDescriptors(new File(rootId), Collections.singletonList(getPonyTargetType()), null));
     }
 
     @NotNull
     @Override
     public String getPresentableName() {
-        return null;
+        return "Pony";
     }
 
     @NotNull
     @Override
     public Collection<File> getOutputRoots(CompileContext compileContext) {
-        return null;
+        return ContainerUtil.createMaybeSingletonList(JpsJavaExtensionService.getInstance().getOutputDirectory(myModule, isTests()));
     }
 }
