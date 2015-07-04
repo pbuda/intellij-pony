@@ -16,62 +16,41 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
-import com.intellij.execution.ExecutionException;
-import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.ModuleChunk;
+import org.jetbrains.jps.builders.BuildOutputConsumer;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
-import org.jetbrains.jps.builders.java.JavaSourceRootDescriptor;
-import org.jetbrains.jps.incremental.BuilderCategory;
 import org.jetbrains.jps.incremental.CompileContext;
-import org.jetbrains.jps.incremental.ModuleBuildTarget;
-import org.jetbrains.jps.incremental.ModuleLevelBuilder;
 import org.jetbrains.jps.incremental.ProjectBuildException;
-import org.jetbrains.jps.incremental.messages.BuildMessage;
-import org.jetbrains.jps.incremental.messages.CompilerMessage;
-import org.jetbrains.jps.incremental.messages.ProgressMessage;
+import org.jetbrains.jps.incremental.TargetBuilder;
 import org.jetbrains.jps.model.module.JpsModule;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 
-public class PonyBuilder extends ModuleLevelBuilder {
+public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTarget> {
 
     public PonyBuilder() {
-        super(BuilderCategory.TRANSLATOR);
-    }
-
-    @Override
-    public ExitCode build(final CompileContext compileContext,
-                          final ModuleChunk moduleChunk,
-                          final DirtyFilesHolder<JavaSourceRootDescriptor, ModuleBuildTarget> dirtyFilesHolder,
-                          final OutputConsumer outputConsumer) throws ProjectBuildException, IOException {
-        try {
-            for (final JpsModule jpsModule : moduleChunk.getModules()) {
-                if (!jpsModule.getModuleType().equals(JpsPonyModuleType.INSTANCE)) {
-                    continue;
-                }
-
-                final String moduleRoot = jpsModule.getContentRootsList().getUrls().get(0).substring("file://".length());
-                final PonyJspInterface pony = new PonyJspInterface(new File(moduleRoot + "/main.pony"));
-                compileContext.processMessage(new ProgressMessage("Pony build"));
-                compileContext.processMessage(new CompilerMessage("Pony", BuildMessage.Kind.INFO, "Starting Pony build"));
-
-                final Process process = pony.runBuild();
-                if (process.waitFor() != 0) {
-                    compileContext.processMessage(new CompilerMessage("Pony", BuildMessage.Kind.ERROR, "Compilation errors"));
-                }
-            }
-            return ExitCode.OK;
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ExitCode.ABORT;
+        super(Collections.singletonList(PonyTargetType.PRODUCTION));
     }
 
     @NotNull
     @Override
     public String getPresentableName() {
         return "Pony builder";
+    }
+
+    @Override
+    public void build(@NotNull PonyTarget target,
+                      @NotNull DirtyFilesHolder<PonySourceRootDescriptor, PonyTarget> dirtyFilesHolder,
+                      @NotNull BuildOutputConsumer buildOutputConsumer,
+                      @NotNull CompileContext compileContext) throws ProjectBuildException, IOException {
+        runPony(target.getModule());
+    }
+
+    private void runPony(@NotNull final JpsModule module) throws ProjectBuildException {
+        final String moduleRoot = module.getContentRootsList().getUrls().get(0).substring("file://".length());
+        final PonyJspInterface pony = new PonyJspInterface(new File(moduleRoot + "/main.pony"));
+        pony.runBuild();
     }
 }

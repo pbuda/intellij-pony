@@ -19,6 +19,7 @@ package me.piotrbuda.intellij.pony.jps;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.jps.incremental.ProjectBuildException;
 
 import java.io.File;
 
@@ -31,8 +32,12 @@ public class PonyJspInterface {
         this.mainPony = mainPony;
     }
 
-    public Process runBuild() throws ExecutionException {
-        return runCommand("ponyc");
+    public Process runBuild() throws ProjectBuildException {
+        try {
+            return runCommand("ponyc");
+        } catch (ExecutionException e) {
+            throw new ProjectBuildException("Failed to launch Pony compiler");
+        }
     }
 
     private Process runCommand(@NotNull final String command) throws ExecutionException {

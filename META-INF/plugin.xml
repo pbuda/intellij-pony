@@ -40,6 +40,6 @@
         <moduleConfigurationEditorProvider implementation="me.piotrbuda.intellij.pony.settings.PonyModuleConfigurationEditor" order="first"/>
 
         <!-- external builder support -->
-        <compileServer.plugin classpath="jps-plugin.jar"/>
+        <compileServer.plugin classpath="jps/jps-plugin.jar"/>
     </extensions>
 </idea-plugin>
