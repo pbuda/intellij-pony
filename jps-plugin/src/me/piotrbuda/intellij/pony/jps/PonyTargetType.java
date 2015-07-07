@@ -31,6 +31,7 @@ import java.util.List;
 public class PonyTargetType extends ModuleBasedBuildTargetType<PonyTarget> {
 
     public static final PonyTargetType PRODUCTION = new PonyTargetType("pony-production");
+    public static final PonyTargetType TESTS = new PonyTargetType("pony-tests");
 
     private PonyTargetType(@NotNull final String pony) {
         super(pony);
