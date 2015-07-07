@@ -29,7 +29,17 @@
         <!-- project wizard -->
         <moduleBuilder builderClass="me.piotrbuda.intellij.pony.project.PonyModuleBuilder" id="PONY_STEP"
                        order="first"/>
-        <moduleType id="PONY_MODULE_TYPE" implementationClass="me.piotrbuda.intellij.pony.project.PonyModuleType"/>
+        <moduleType id="PONY_MODULE" implementationClass="me.piotrbuda.intellij.pony.project.PonyModuleType"/>
         <sdkType implementation="me.piotrbuda.intellij.pony.sdk.PonySdkType"/>
+
+        <configurationType implementation="me.piotrbuda.intellij.pony.runner.PonyRunConfigurationType"/>
+
+        <programRunner implementation="me.piotrbuda.intellij.pony.runner.PonyRunner"/>
+
+        <!-- settings -->
+        <moduleConfigurationEditorProvider implementation="me.piotrbuda.intellij.pony.settings.PonyModuleConfigurationEditor" order="first"/>
+
+        <!-- external builder support -->
+        <compileServer.plugin classpath="jps/jps-plugin.jar"/>
     </extensions>
 </idea-plugin>

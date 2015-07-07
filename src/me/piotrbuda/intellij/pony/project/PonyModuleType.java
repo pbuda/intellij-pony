@@ -17,15 +17,20 @@
 package me.piotrbuda.intellij.pony.project;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.ProjectJdkForModuleStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import me.piotrbuda.intellij.pony.sdk.PonySdkType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public class PonyModuleType extends ModuleType<PonyModuleBuilder> {
 
-    public static final String ID = "PONY_MODULE_TYPE";
+    public static final String ID = "PONY_MODULE";
 
     public static PonyModuleType getInstance() {
         return (PonyModuleType) ModuleTypeManager.getInstance().findByID(ID);
@@ -63,4 +68,17 @@ public class PonyModuleType extends ModuleType<PonyModuleBuilder> {
         return AllIcons.General.Information;
     }
 
+    @NotNull
+    @Override
+    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull final PonyModuleBuilder moduleBuilder, @NotNull ModulesProvider modulesProvider) {
+        return new ModuleWizardStep[]{
+                new ProjectJdkForModuleStep(wizardContext, PonySdkType.getInstance()) {
+                    @Override
+                    public void updateDataModel() {
+                        moduleBuilder.setModuleJdk(getJdk());
+                        super.updateDataModel();
+                    }
+                }
+        };
+    }
 }

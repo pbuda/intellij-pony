@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
-package me.piotrbuda.intellij.pony.project;
+package me.piotrbuda.intellij.pony.runner;
 
-import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import me.piotrbuda.intellij.pony.sdk.PonySdkType;
+import com.intellij.openapi.options.SettingsEditor;
+import org.jetbrains.annotations.NotNull;
 
-public class PonyModuleBuilder extends JavaModuleBuilder {
+import javax.swing.*;
+
+public class PonyRunConfigurationEditor extends SettingsEditor<PonyRunConfiguration> {
+    private JPanel jPanel;
+
     @Override
-    public ModuleType getModuleType() {
-        return PonyModuleType.getInstance();
+    protected void resetEditorFrom(final PonyRunConfiguration runConfiguration) {
+
     }
 
     @Override
-    public boolean isSuitableSdkType(SdkTypeId sdkType) {
-        return sdkType == PonySdkType.getInstance();
+    protected void applyEditorTo(final PonyRunConfiguration runConfiguration) throws ConfigurationException {
+
+    }
+
+    @NotNull
+    @Override
+    protected JComponent createEditor() {
+        return jPanel;
     }
 }

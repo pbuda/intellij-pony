@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package me.piotrbuda.intellij.pony.project;
+package me.piotrbuda.intellij.pony.runner;
 
-import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import me.piotrbuda.intellij.pony.sdk.PonySdkType;
+import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.runners.DefaultProgramRunner;
+import org.jetbrains.annotations.NotNull;
 
-public class PonyModuleBuilder extends JavaModuleBuilder {
+public class PonyRunner extends DefaultProgramRunner {
+
+    public static final String PONY_RUNNER_ID = "Pony Runner";
+
+    @NotNull
     @Override
-    public ModuleType getModuleType() {
-        return PonyModuleType.getInstance();
+    public String getRunnerId() {
+        return PONY_RUNNER_ID;
     }
 
     @Override
-    public boolean isSuitableSdkType(SdkTypeId sdkType) {
-        return sdkType == PonySdkType.getInstance();
+    public boolean canRun(@NotNull final String s, @NotNull final RunProfile runProfile) {
+        //TODO: Implement a real check
+        return true;
     }
 }
