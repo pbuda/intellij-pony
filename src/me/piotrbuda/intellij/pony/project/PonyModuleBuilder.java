@@ -16,43 +16,21 @@
 
 package me.piotrbuda.intellij.pony.project;
 
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.ProjectJdkForModuleStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.vfs.VirtualFile;
 import me.piotrbuda.intellij.pony.sdk.PonySdkType;
-import org.jetbrains.annotations.NotNull;
 
-public class PonyModuleBuilder extends ModuleBuilder {
-    @Override
-    public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
-        final VirtualFile projectBaseDir = modifiableRootModel.getProject().getBaseDir();
-        final ContentEntry contentEntry = modifiableRootModel.addContentEntry(projectBaseDir);
-        contentEntry.addSourceFolder(projectBaseDir, false);
-    }
-
+public class PonyModuleBuilder extends JavaModuleBuilder {
     @Override
     public ModuleType getModuleType() {
         return PonyModuleType.getInstance();
     }
 
     @Override
-    public ModuleWizardStep[] createWizardSteps(@NotNull final WizardContext wizardContext,
-                                                @NotNull final ModulesProvider modulesProvider) {
-        return new ModuleWizardStep[]{
-                new ProjectJdkForModuleStep(wizardContext, PonySdkType.getInstance()) {
-                    @Override
-                    public void updateDataModel() {
-                        PonyModuleBuilder.this.setModuleJdk(getJdk());
-                        super.updateDataModel();
-                    }
-                }
-        };
+    public boolean isSuitableSdkType(SdkTypeId sdkType) {
+        return sdkType == PonySdkType.getInstance();
     }
 }
