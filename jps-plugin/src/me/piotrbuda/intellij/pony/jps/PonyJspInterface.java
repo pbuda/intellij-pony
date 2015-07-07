@@ -18,12 +18,15 @@ package me.piotrbuda.intellij.pony.jps;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.incremental.ProjectBuildException;
 
 import java.io.File;
 
 public class PonyJspInterface {
+
+    public static final Logger LOG = Logger.getInstance(PonyJspInterface.class);
 
     @NotNull
     private final File mainPony;
@@ -36,6 +39,7 @@ public class PonyJspInterface {
         try {
             return runCommand("ponyc");
         } catch (ExecutionException e) {
+            LOG.warn("Error executing Pony compiler", e);
             throw new ProjectBuildException("Failed to launch Pony compiler");
         }
     }
