@@ -16,22 +16,31 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
+import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.builders.BuildOutputConsumer;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.ProjectBuildException;
 import org.jetbrains.jps.incremental.TargetBuilder;
+import org.jetbrains.jps.incremental.resources.ResourcesBuilder;
+import org.jetbrains.jps.incremental.resources.StandardResourceBuilderEnabler;
 import org.jetbrains.jps.model.module.JpsModule;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 
 public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTarget> {
 
     public PonyBuilder() {
-        super(Collections.singletonList(PonyTargetType.PRODUCTION));
+        super(Arrays.asList(PonyTargetType.PRODUCTION, PonyTargetType.TESTS));
+        ResourcesBuilder.registerEnabler(new StandardResourceBuilderEnabler() {
+            @Override
+            public boolean isResourceProcessingEnabled(@NotNull JpsModule module) {
+                return !(module.getModuleType() instanceof JpsPonyModuleType);
+            }
+        });
     }
 
     @NotNull

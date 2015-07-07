@@ -21,6 +21,7 @@ import org.jetbrains.jps.builders.BuildTargetType;
 import org.jetbrains.jps.incremental.BuilderService;
 import org.jetbrains.jps.incremental.TargetBuilder;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,6 @@ public class PonyBuilderService extends BuilderService {
     @NotNull
     @Override
     public List<? extends BuildTargetType<?>> getTargetTypes() {
-        return Collections.singletonList(PonyTargetType.PRODUCTION);
+        return Arrays.asList(PonyTargetType.PRODUCTION, PonyTargetType.TESTS);
     }
 }
