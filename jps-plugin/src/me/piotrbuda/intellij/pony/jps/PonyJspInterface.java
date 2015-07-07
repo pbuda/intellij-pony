@@ -29,30 +29,23 @@ public class PonyJspInterface {
     public static final Logger LOG = Logger.getInstance(PonyJspInterface.class);
 
     @NotNull
-    private final File mainPony;
+    private final File rootDir;
 
-    PonyJspInterface(@NotNull final File mainPony) {
-        this.mainPony = mainPony;
+    PonyJspInterface(@NotNull final File rootDir) {
+        this.rootDir = rootDir;
     }
 
-    public Process runBuild() throws ProjectBuildException {
+    public Process runBuild(@NotNull final File outputDirectory) throws ProjectBuildException {
         try {
-            return runCommand("ponyc");
+            final GeneralCommandLine commandLine = new GeneralCommandLine();
+            commandLine.withWorkDirectory(rootDir.getPath() + "/src");
+            commandLine.setRedirectErrorStream(true);
+            commandLine.setExePath("ponyc");
+            commandLine.addParameter("--output=" + outputDirectory.getPath());
+            return commandLine.createProcess();
         } catch (ExecutionException e) {
             LOG.warn("Error executing Pony compiler", e);
             throw new ProjectBuildException("Failed to launch Pony compiler");
         }
-    }
-
-    private Process runCommand(@NotNull final String command) throws ExecutionException {
-        return preparedCommandLine(command).createProcess();
-    }
-
-    private GeneralCommandLine preparedCommandLine(@NotNull final String command) {
-        final GeneralCommandLine commandLine = new GeneralCommandLine();
-        commandLine.withWorkDirectory(mainPony.getParentFile().getPath());
-        commandLine.setRedirectErrorStream(true);
-        commandLine.addParameter(command);
-        return commandLine;
     }
 }
