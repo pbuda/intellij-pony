@@ -32,8 +32,8 @@
         <moduleType id="PONY_MODULE" implementationClass="me.piotrbuda.intellij.pony.project.PonyModuleType"/>
         <sdkType implementation="me.piotrbuda.intellij.pony.sdk.PonySdkType"/>
 
+        <!-- run configuration -->
         <configurationType implementation="me.piotrbuda.intellij.pony.runner.PonyRunConfigurationType"/>
-
         <programRunner implementation="me.piotrbuda.intellij.pony.runner.PonyRunner"/>
 
         <!-- settings -->
