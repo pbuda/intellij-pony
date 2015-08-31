@@ -22,8 +22,10 @@ import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
 import com.intellij.execution.configurations.RuntimeConfigurationException;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
@@ -32,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class PonyRunConfiguration extends RunConfigurationBase {
+public class PonyRunConfiguration extends RunConfigurationBase implements RunProfileWithCompileBeforeLaunchOption {
 
 
     protected PonyRunConfiguration(final Project project,
@@ -57,5 +59,11 @@ public class PonyRunConfiguration extends RunConfigurationBase {
     public RunProfileState getState(@NotNull final Executor executor,
                                     @NotNull final ExecutionEnvironment executionEnvironment) throws ExecutionException {
         return new PonyApplicationCommandLineState(executionEnvironment);
+    }
+
+    @NotNull
+    @Override
+    public Module[] getModules() {
+        return new Module[0];
     }
 }

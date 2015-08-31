@@ -35,7 +35,7 @@ public class PonyApplicationCommandLineState extends CommandLineState {
     protected ProcessHandler startProcess() throws ExecutionException {
         final ExecutionEnvironment environment = getEnvironment();
         final GeneralCommandLine commandLine = new GeneralCommandLine();
-        commandLine.withWorkDirectory(environment.getProject().getBasePath());
+        commandLine.withWorkDirectory(environment.getProject().getBasePath() + "/out/production/" + environment.getProject().getName());
         commandLine.setExePath(environment.getProject().getName());
         return new OSProcessHandler(commandLine.createProcess());
     }

@@ -27,6 +27,7 @@ import org.jetbrains.jps.incremental.ProjectBuildException;
 import org.jetbrains.jps.incremental.TargetBuilder;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
+import org.jetbrains.jps.incremental.messages.ProgressMessage;
 import org.jetbrains.jps.incremental.resources.ResourcesBuilder;
 import org.jetbrains.jps.incremental.resources.StandardResourceBuilderEnabler;
 import org.jetbrains.jps.model.java.JpsJavaExtensionService;
@@ -63,7 +64,21 @@ public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTar
                       @NotNull CompileContext compileContext) throws ProjectBuildException, IOException {
         System.out.println(target.getOutputRoots(compileContext));
         File outputDirectory = getBuildOutputDirectory(target.getModule(), false, compileContext);
+        compileContext.processMessage(new ProgressMessage("Compiling Pony sources"));
         runPonyc(target.getModule(), outputDirectory);
+        compileContext.checkCanceled();
+        compileContext.processMessage(new ProgressMessage(""));
+    }
+
+    private void runPonyc(@NotNull final JpsModule module, @NotNull final File outputDirectory) throws ProjectBuildException {
+        final String moduleRoot = module.getContentRootsList().getUrls().get(0).substring("file://".length());
+        final PonyJspInterface pony = new PonyJspInterface(new File(moduleRoot));
+        Process process = pony.runBuild(outputDirectory);
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+            LOG.error("Error during ponyc invocation - interrupted");
+        }
     }
 
     @NotNull
@@ -81,11 +96,5 @@ public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTar
             FileUtil.createDirectory(outputDirectory);
         }
         return outputDirectory;
-    }
-
-    private void runPonyc(@NotNull final JpsModule module, @NotNull final File outputDirectory) throws ProjectBuildException {
-        final String moduleRoot = module.getContentRootsList().getUrls().get(0).substring("file://".length());
-        final PonyJspInterface pony = new PonyJspInterface(new File(moduleRoot));
-        pony.runBuild(outputDirectory);
     }
 }
