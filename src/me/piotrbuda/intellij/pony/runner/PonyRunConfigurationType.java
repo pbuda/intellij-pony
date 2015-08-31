@@ -22,6 +22,6 @@ import com.intellij.icons.AllIcons;
 public class PonyRunConfigurationType extends ConfigurationTypeBase {
     protected PonyRunConfigurationType() {
         super("PonyRunConfiguration", "Pony", "Pony run configuration", AllIcons.General.Information);
-
+        addFactory(new PonyRunConfigurationFactory(this));
     }
 }
