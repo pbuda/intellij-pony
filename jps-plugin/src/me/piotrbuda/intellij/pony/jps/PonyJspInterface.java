@@ -38,7 +38,7 @@ public class PonyJspInterface {
     public Process runBuild(@NotNull final File outputDirectory) throws ProjectBuildException {
         try {
             final GeneralCommandLine commandLine = new GeneralCommandLine();
-            commandLine.withWorkDirectory(rootDir.getPath() + "/src");
+            commandLine.withWorkDirectory(rootDir.getPath());
             commandLine.setRedirectErrorStream(true);
             commandLine.setExePath("ponyc");
             commandLine.addParameter("--output=" + outputDirectory.getPath());
