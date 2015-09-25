@@ -1,0 +1,225 @@
+{
+  parserClass="me.piotrbuda.intellij.pony.psi.PonyParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Pony"
+  psiImplClassSuffix="Impl"
+  psiPackage="me.piotrbuda.intellij.pony.psi.api"
+  psiImplPackage="me.piotrbuda.intellij.pony.psi.impl"
+
+  elementTypeHolderClass="me.piotrbuda.intellij.pony.psi.PonyTypes"
+  elementTypeClass="me.piotrbuda.intellij.pony.psi.PonyElementType"
+  tokenTypeClass="me.piotrbuda.intellij.pony.psi.PonyTokenType"
+}
+
+module ::= STRING? use* class_def*
+
+use ::= 'use' (ID '=')? (STRING | use_ffi) ('if' infix)?
+
+use_ffi ::= '@' (ID | STRING) typeargs ('(' | LPAREN_NEW) params? ')' '?'?
+
+class_def ::= ('type' | 'interface' | 'trait' | 'primitive' | 'class' | 'actor') '@'? ID typeparams? cap? ('is' types)? STRING? members
+
+members ::= field* method*
+
+field ::= ('var' | 'let') ID ':' type ('=' infix)?
+
+method ::= ('fun' | 'be' | 'new') cap? ID typeparams? ('(' | LPAREN_NEW) params? ')' (':' type)? '?'? STRING? ('=>' rawseq)?
+
+rawseq ::= exprseq | jump
+
+exprseq ::= assignment (semiexpr | nosemi)?
+
+nextexprseq ::= nextassignment (semiexpr | nosemi)?
+
+nosemi ::= nextexprseq | jump
+
+semiexpr ::= ';' (exprseq | jump)
+
+jump ::= ('return' | 'break' | 'continue' | 'error' | 'compiler_intrinsic') rawseq?
+
+nextassignment ::= nextinfix ('=' assignment)?
+
+assignment ::= infix ('=' assignment)?
+
+nextinfix ::= nextterm (binop | ('as' type))*
+
+infix ::= term (binop | ('as' type))*
+
+binop ::= ('and' | 'or' | 'xor' | '+' | '-' | '*' | '/' | '%' | '<<' | '>>' | 'is' | 'isnt' | '==' | '!=' | '<' | '<=' | '>=' | '>') term
+
+nextterm ::= ('var' | 'let') ID (':' type)?
+  | 'if' rawseq 'then' rawseq (elseif | ('else' rawseq))? 'end'
+  | 'match' rawseq caseexpr* ('else' rawseq)? 'end'
+  | 'while' rawseq 'do' rawseq ('else' rawseq)? 'end'
+  | 'repeat' rawseq 'until' rawseq ('else' rawseq)? 'end'
+  | 'for' idseq 'in' rawseq 'do' rawseq ('else' rawseq)? 'end'
+  | 'with' (withelem (',' withelem)*) 'do' rawseq ('else' rawseq)? 'end'
+  | 'try' rawseq ('else' rawseq)? ('then' rawseq)? 'end'
+  | 'recover' cap? rawseq 'end'
+  | 'consume' cap? term
+  | ('not' | '&' | MINUS_NEW | 'identityof') term
+  | nextpostfix
+
+term
+  ::= ('var' | 'let') ID (':' type)?
+  | 'if' rawseq 'then' rawseq (elseif | ('else' rawseq))? 'end'
+  | 'match' rawseq caseexpr* ('else' rawseq)? 'end'
+  | 'while' rawseq 'do' rawseq ('else' rawseq)? 'end'
+  | 'repeat' rawseq 'until' rawseq ('else' rawseq)? 'end'
+  | 'for' idseq 'in' rawseq 'do' rawseq ('else' rawseq)? 'end'
+  | 'with' (withelem (',' withelem)*) 'do' rawseq ('else' rawseq)? 'end'
+  | 'try' rawseq ('else' rawseq)? ('then' rawseq)? 'end'
+  | 'recover' cap? rawseq 'end'
+  | 'consume' cap? term
+  | ('not' | '&' | '-' | MINUS_NEW | 'identityof') term
+  | postfix
+  ;
+
+withelem
+  ::= idseq '=' rawseq
+  ;
+
+caseexpr
+  ::='|' infix? ('where' rawseq)? ('=>' rawseq)?
+  ;
+
+elseif
+  ::='elseif' rawseq 'then' rawseq (elseif | ('else' rawseq))?
+  ;
+
+idseq
+  ::=ID
+  | '_'
+  | ('(' | LPAREN_NEW) idseq (',' idseq)* ')'
+  ;
+
+nextpostfix
+  ::=nextatom (dot | tilde | typeargs | call)*
+  ;
+
+postfix
+  ::=atom (dot | tilde | typeargs | call)*
+  ;
+
+call
+  ::='(' positional? named? ')'
+  ;
+
+tilde
+  ::='~' ID
+  ;
+
+dot
+  ::='.' ID
+  ;
+
+nextatom
+  ::=ID
+  | literal
+  | LPAREN_NEW (rawseq | '_') tuple? ')'
+  | LSQUARE_NEW ('as' type ':')? rawseq (',' rawseq)* ']'
+  | 'object' ('is' types)? members 'end'
+  | 'lambda' typeparams? ('(' | LPAREN_NEW) params? ')' (':' type)? '?'? '=>' rawseq 'end'
+  | '@' (ID | STRING) typeargs? ('(' | LPAREN_NEW) positional? named? ')' '?'?
+  ;
+
+atom
+  ::=ID
+  | literal
+  | ('(' | LPAREN_NEW) (rawseq | '_') tuple? ')'
+  | ('[' | LSQUARE_NEW) ('as' type ':')? rawseq (',' rawseq)* ']'
+  | 'object' ('is' types)? members 'end'
+  | 'lambda' typeparams? ('(' | LPAREN_NEW) params? ')' (':' type)? '?'? '=>' rawseq 'end'
+  | '@' (ID | STRING) typeargs? ('(' | LPAREN_NEW) positional? named? ')' '?'?
+  ;
+
+literal
+  ::='this'
+  | 'true'
+  | 'false'
+  | INT
+  | FLOAT
+  | STRING
+  ;
+
+tuple
+  ::=',' (rawseq | '_') (',' (rawseq | '_'))*
+  ;
+
+positional
+  ::=rawseq (',' rawseq)*
+  ;
+
+named
+  ::='where' namedarg (',' namedarg)*
+  ;
+
+namedarg
+  ::=ID '=' rawseq
+  ;
+
+type
+  ::=atomtype ('->' type)?
+  ;
+
+atomtype
+  ::='this'
+  | 'box'
+  | ('(' | LPAREN_NEW) (infixtype | '_') tupletype? ')'
+  | nominal
+  ;
+
+tupletype
+  ::=',' (infixtype | '_') (',' (infixtype | '_'))*
+  ;
+
+infixtype
+  ::=type (uniontype | isecttype)*
+  ;
+
+isecttype
+  ::='&' type
+  ;
+
+uniontype
+  ::='|' type
+  ;
+
+nominal
+  ::=ID ('.' ID)? typeargs? cap? ('^' | '!')?
+  ;
+
+cap
+  ::='iso'
+  | 'trn'
+  | 'ref'
+  | 'val'
+  | 'box'
+  | 'tag'
+  ;
+
+typeargs
+  ::='[' type (',' type)* ']'
+  ;
+
+typeparams
+  ::=('[' | LSQUARE_NEW) typeparam (',' typeparam)* ']'
+  ;
+
+params
+  ::=(param | '...') (',' (param | '...'))*
+  ;
+
+typeparam
+  ::=ID (':' type)? ('=' type)?
+  ;
+
+param
+  ::=ID ':' type ('=' infix)?
+  ;
+
+types
+  ::=type (',' type)*
+  ;
