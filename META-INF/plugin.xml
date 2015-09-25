@@ -41,5 +41,19 @@
 
         <!-- external builder support -->
         <compileServer.plugin classpath="jps/jps-plugin.jar"/>
+
+        <!-- file templates -->
+        <createFromTemplateHandler implementation="me.piotrbuda.intellij.pony.actions.PonyCreateFromTemplateHandler"/>
+        <internalFileTemplate name="Pony Class"/>
+        <internalFileTemplate name="Pony Actor"/>
+        <internalFileTemplate name="Pony Interface"/>
+        <internalFileTemplate name="Pony Trait"/>
     </extensions>
+
+    <actions>
+        <action id="Pony.NewPonyFile" class="me.piotrbuda.intellij.pony.actions.CreatePonyFileAction"
+                text="Pony File" description="Create new Pony file">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+    </actions>
 </idea-plugin>
