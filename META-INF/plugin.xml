@@ -59,6 +59,8 @@
         <internalFileTemplate name="Pony Actor"/>
         <internalFileTemplate name="Pony Interface"/>
         <internalFileTemplate name="Pony Trait"/>
+
+        <lang.parserDefinition language="Pony" implementationClass="me.piotrbuda.intellij.pony.parser.PonyParserDefinition"/>
     </extensions>
 
     <actions>
