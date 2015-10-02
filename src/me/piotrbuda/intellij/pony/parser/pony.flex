@@ -26,19 +26,28 @@ import static me.piotrbuda.intellij.pony.parser.PonyParserDefinition.*;
 
 CRLF= \n|\r|\r\n
 WHITE_SPACE=[\ \t\f] | {CRLF}
+FLOAT = [:digit:] "." [:digit:]
 ID = (_ | [:jletter:] | [:jletterdigit:])*
-CLASS_DEF = "type" | "interface" | "trait" | "primitive" | "class" | "actor"
-CAPS = "iso" | "trn" | "ref" | "val" | "box" | "tag"
-TYPE_PARAM = "[" | "]"
+INT = [:digit:]
+LPAREN_NEW = "("
+LSQUARE_NEW = "["
+MINUS_NEW = "-"
+STRING = \"
+
+%s IN_STRING
 
 %%
 
-<YYINITIAL> {CLASS_DEF} { return CLASS_DEF; }
-<YYINITIAL> {CAPS} {return CAP;}
-<YYINITIAL> {ID} {return ID;}
-<YYINITIAL> {TYPE_PARAM} {return TYPEPARAM;}
-<YYINITIAL> {TYPE_PARAM} ("," {TYPE_PARAM})* {return TYPEPARAMS;}
+<YYINITIAL> {
+ {INT} {return INT;}
+ {FLOAT} {return FLOAT;}
+ {ID} {return ID;}
+ {LPAREN_NEW} {return LPAREN_NEW;}
+ {LSQUARE_NEW} {return LSQUARE_NEW;}
+ {MINUS_NEW} {return MINUS_NEW;}
+ {STRING} {yybegin(IN_STRING);}
+ {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
+ . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
 
-<YYINITIAL> {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
-
-<YYINITIAL> . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+<IN_STRING> \" {yybegin(YYINITIAL);}
