@@ -27,12 +27,11 @@ import static me.piotrbuda.intellij.pony.parser.PonyParserDefinition.*;
 CRLF= \n|\r|\r\n
 WHITE_SPACE=[\ \t\f] | {CRLF}
 ID = (_ | [:jletter:] | [:jletterdigit:])*
-
-%state IN_CLASS_DEF
+CLASS_DEF = "type" | "interface" | "trait" | "primitive" | "class" | "actor"
 
 %%
 
-<YYINITIAL> "actor" { return CLASS_DEF; }
+<YYINITIAL> {CLASS_DEF} { return CLASS_DEF; }
 <YYINITIAL> {ID} {return ID;}
 <YYINITIAL> {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
 
