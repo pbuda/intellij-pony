@@ -32,9 +32,7 @@ INT = [:digit:]
 LPAREN_NEW = "("
 LSQUARE_NEW = "["
 MINUS_NEW = "-"
-STRING = \"
-
-%s IN_STRING
+STRING = \" ([:jletterdigit:] | " ")* \"
 
 %%
 
@@ -45,9 +43,8 @@ STRING = \"
  {LPAREN_NEW} {return LPAREN_NEW;}
  {LSQUARE_NEW} {return LSQUARE_NEW;}
  {MINUS_NEW} {return MINUS_NEW;}
- {STRING} {yybegin(IN_STRING);}
+ {STRING} {return STRING;}
  {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
  . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
-<IN_STRING> \" {yybegin(YYINITIAL);}
