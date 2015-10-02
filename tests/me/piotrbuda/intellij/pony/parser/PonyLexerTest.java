@@ -23,9 +23,8 @@ public class PonyLexerTest extends ParsingTestCase {
         super("parser", "pony", new PonyParserDefinition());
     }
 
-    public void testSimpleClassDef() {
-        doTest(true);
-    }
+    public void testSimpleClassDef() {doTest(true);}
+    public void testCapabilities() {doTest(true);}
 
     @Override
     protected String getTestDataPath() {

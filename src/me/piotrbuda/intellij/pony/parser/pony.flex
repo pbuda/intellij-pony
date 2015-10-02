@@ -28,11 +28,14 @@ CRLF= \n|\r|\r\n
 WHITE_SPACE=[\ \t\f] | {CRLF}
 ID = (_ | [:jletter:] | [:jletterdigit:])*
 CLASS_DEF = "type" | "interface" | "trait" | "primitive" | "class" | "actor"
+CAPS = "iso" | "trn" | "ref" | "val" | "box" | "tag"
 
 %%
 
 <YYINITIAL> {CLASS_DEF} { return CLASS_DEF; }
+<YYINITIAL> {CAPS} {return CAP;}
 <YYINITIAL> {ID} {return ID;}
+
 <YYINITIAL> {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
 
 <YYINITIAL> . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
