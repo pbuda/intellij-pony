@@ -25,15 +25,15 @@ import static me.piotrbuda.intellij.pony.parser.PonyParserDefinition.*;
 %eof}
 
 CRLF= \n|\r|\r\n
-WHITE_SPACE=[\ \t\f]
-LETTER = [a-z] | [A-Z]
+WHITE_SPACE=[\ \t\f] | {CRLF}
+ID = (_ | [:jletter:] | [:jletterdigit:])*
 
-%state YYINITIAL
+%state IN_CLASS_DEF
 
 %%
 
-<YYINITIAL> {WHITE_SPACE}  { return com.intellij.psi.TokenType.WHITE_SPACE; }
-//<YYINITIAL> {CRLF}  { return com.intellij.psi.TokenType.WHITE_SPACE; }
 <YYINITIAL> "actor" { return CLASS_DEF; }
-//<YYINITIAL> {LETTER}+{WHITE_SPACE}+ { return LITERAL; }
+<YYINITIAL> {ID} {return ID;}
+<YYINITIAL> {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
 
+<YYINITIAL> . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
