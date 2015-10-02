@@ -1,0 +1,7 @@
+FILE(0,10)
+  PonyClassDefImpl(CLASS_DEF)(0,10)
+    PsiElement(CLASS_DEF)('actor')(0,5)
+    PsiWhiteSpace(' ')(5,6)
+    PsiElement(PonyTokenType.ID)('Main')(6,10)
+    PonyMembersImpl(MEMBERS)(10,10)
+      <empty list>
