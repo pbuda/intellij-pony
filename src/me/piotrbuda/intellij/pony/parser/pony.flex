@@ -29,12 +29,15 @@ WHITE_SPACE=[\ \t\f] | {CRLF}
 ID = (_ | [:jletter:] | [:jletterdigit:])*
 CLASS_DEF = "type" | "interface" | "trait" | "primitive" | "class" | "actor"
 CAPS = "iso" | "trn" | "ref" | "val" | "box" | "tag"
+TYPE_PARAM = "[" | "]"
 
 %%
 
 <YYINITIAL> {CLASS_DEF} { return CLASS_DEF; }
 <YYINITIAL> {CAPS} {return CAP;}
 <YYINITIAL> {ID} {return ID;}
+<YYINITIAL> {TYPE_PARAM} {return TYPEPARAM;}
+<YYINITIAL> {TYPE_PARAM} ("," {TYPE_PARAM})* {return TYPEPARAMS;}
 
 <YYINITIAL> {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
 
