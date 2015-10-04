@@ -61,6 +61,7 @@
         <internalFileTemplate name="Pony Trait"/>
 
         <lang.parserDefinition language="Pony" implementationClass="me.piotrbuda.intellij.pony.parser.PonyParserDefinition"/>
+        <lang.syntaxHighlighterFactory implementationClass="me.piotrbuda.intellij.pony.syntax.PonySyntaxHighlighterFactory"/>
     </extensions>
 
     <actions>
