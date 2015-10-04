@@ -31,8 +31,13 @@ ID = (_ | [:jletter:] | [:jletterdigit:])*
 INT = [:digit:]
 LPAREN_NEW = "("
 LSQUARE_NEW = "["
+RPAREN = ")"
+RSQUARE = "]"
 MINUS_NEW = "-"
 STRING = \" ([:jletterdigit:] | " ")* \"
+BEGIN_RAWSEQ = "=>"
+BEGIN_TYPE = ":"
+DOTS = "."
 
 %%
 
@@ -44,6 +49,11 @@ STRING = \" ([:jletterdigit:] | " ")* \"
  {LSQUARE_NEW} {return LSQUARE_NEW;}
  {MINUS_NEW} {return MINUS_NEW;}
  {STRING} {return STRING;}
+ {BEGIN_RAWSEQ} {return BEGIN_RAWSEQ;}
+ {BEGIN_TYPE} {return BEGIN_TYPE;}
+ {RPAREN} {return RPAREN;}
+ {RSQUARE} {return RSQUARE;}
+ {DOTS} {return DOTS;}
  {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
  . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

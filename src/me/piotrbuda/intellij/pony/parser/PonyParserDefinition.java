@@ -43,6 +43,14 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final TokenSet WS = TokenSet.create(TokenType.WHITE_SPACE);
     public static final IElementType LINE_COMMENT = new PonyTokenType("PONY_LINE_COMMENT");
 
+    public static final TokenSet STRINGS = TokenSet.create(PonyTypes.STRING);
+
+    public static final IElementType BEGIN_RAWSEQ = new PonyTokenType("BEGIN_RAWSEQ");
+    public static final IElementType BEGIN_TYPE = new PonyTokenType("BEGIN_TYPE");
+    public static final IElementType RPAREN = new PonyTokenType("RPAREN");
+    public static final IElementType RSQUARE = new PonyTokenType("RSQUARE");
+    public static final IElementType DOTS = new PonyTokenType("DOTS");
+
     @NotNull
     @Override
     public Lexer createLexer(final Project project) {
@@ -74,7 +82,7 @@ public class PonyParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getStringLiteralElements() {
-        return TokenSet.EMPTY;
+        return STRINGS;
     }
 
     @NotNull

@@ -27,6 +27,8 @@ public class PonyLexerTest extends ParsingTestCase {
     public void testCapabilities() {doTest(true);}
     public void testMembers() {doTest(true);}
     public void testTypeParam() {doTest(true);}
+    public void testMethods() {doTest(true);}
+
 
     @Override
     protected String getTestDataPath() {
