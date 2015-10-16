@@ -34,10 +34,15 @@ LSQUARE_NEW = "["
 RPAREN = ")"
 RSQUARE = "]"
 MINUS_NEW = "-"
-STRING = \" ([:jletterdigit:] | " ")* \"
+STRING = \" .* \"
 BEGIN_RAWSEQ = "=>"
 BEGIN_TYPE = ":"
 DOTS = "."
+PONY_USE = "use"
+PONY_IF = "if"
+PONY_AT = "@"
+PONY_QUESTION = "?"
+
 
 %%
 
