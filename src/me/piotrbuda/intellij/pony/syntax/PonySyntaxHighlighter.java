@@ -18,13 +18,23 @@ package me.piotrbuda.intellij.pony.syntax;
 
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import me.piotrbuda.intellij.pony.parser.PonyLexer;
+import me.piotrbuda.intellij.pony.psi.PonyTypes;
 import org.jetbrains.annotations.NotNull;
 
+import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+
 public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
+    public static final TextAttributesKey ILLEGAL = createTextAttributesKey("PONY_ILLEGAL", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
+    public static final TextAttributesKey STRING = createTextAttributesKey("STRINGS", DefaultLanguageHighlighterColors.STRING);
+    public static final TextAttributesKey ID = createTextAttributesKey("ID", DefaultLanguageHighlighterColors.IDENTIFIER);
+    public static final TextAttributesKey METHOD = createTextAttributesKey("METHOD", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
+
     @NotNull
     @Override
     public Lexer getHighlightingLexer() {
@@ -34,6 +44,15 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(final IElementType tokenType) {
-        return new TextAttributesKey[0];
+        if (tokenType == TokenType.BAD_CHARACTER) {
+            return pack(ILLEGAL);
+        } else if (tokenType == PonyTypes.STRING) {
+            return pack(STRING);
+        } else if (tokenType == PonyTypes.ID) {
+            return pack(ID);
+        } else if (tokenType == PonyTypes.METHOD) {
+            return pack(METHOD);
+        }
+        return EMPTY;
     }
 }
