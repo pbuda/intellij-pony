@@ -42,11 +42,12 @@ PONY_USE = "use"
 PONY_IF = "if"
 PONY_AT = "@"
 PONY_QUESTION = "?"
-
+PONY_ACTOR = "actor"
 
 %%
 
 <YYINITIAL> {
+{PONY_ACTOR} {return PONY_ACTOR;}
  {INT} {return INT;}
  {FLOAT} {return FLOAT;}
  {ID} {return ID;}

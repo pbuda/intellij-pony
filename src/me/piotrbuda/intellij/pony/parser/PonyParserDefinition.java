@@ -50,6 +50,7 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType RPAREN = new PonyTokenType("RPAREN");
     public static final IElementType RSQUARE = new PonyTokenType("RSQUARE");
     public static final IElementType DOTS = new PonyTokenType("DOTS");
+    public static final IElementType PONY_ACTOR = new PonyTokenType("PONY_ACTOR");
 
     @NotNull
     @Override
