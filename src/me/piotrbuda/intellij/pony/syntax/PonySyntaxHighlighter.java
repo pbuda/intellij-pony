@@ -24,6 +24,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import me.piotrbuda.intellij.pony.parser.PonyLexer;
+import me.piotrbuda.intellij.pony.parser.PonyParserDefinition;
 import me.piotrbuda.intellij.pony.psi.PonyTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +35,7 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey STRING = createTextAttributesKey("STRINGS", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey ID = createTextAttributesKey("ID", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey METHOD = createTextAttributesKey("METHOD", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
+    public static final TextAttributesKey KEYWORD = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
 
     @NotNull
     @Override
@@ -52,6 +54,8 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
             return pack(ID);
         } else if (tokenType == PonyTypes.METHOD) {
             return pack(METHOD);
+        } else if (tokenType == PonyParserDefinition.PONY_ACTOR) {
+            return pack(KEYWORD);
         }
         return EMPTY;
     }
