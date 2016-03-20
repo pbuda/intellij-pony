@@ -45,7 +45,7 @@ public class PonySdkType extends SdkType {
     public String suggestHomePath() {
         //TODO: Change this based on Windows/*NIX style systems
         //TODO: find real path by using which/where
-        return "/usr/local/Cellar/ponyc/0.1.7";
+        return "/usr/local/Cellar/ponyc/0.2.1";
     }
 
     @Override
