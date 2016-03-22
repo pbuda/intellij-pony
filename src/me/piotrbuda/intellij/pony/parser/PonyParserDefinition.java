@@ -103,6 +103,8 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType ML_COMMENT = new PonyTokenType("ML_COMMENT");
     public static final IElementType ML_COMMENT_CONTENT = new PonyTokenType("ML_COMMENT_CONTENT");
 
+    public static final TokenSet COMMENTS = TokenSet.create(ML_COMMENT, ML_COMMENT_CONTENT);
+
     @NotNull
     @Override
     public Lexer createLexer(final Project project) {
@@ -128,7 +130,7 @@ public class PonyParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getCommentTokens() {
-        return TokenSet.create(LINE_COMMENT, ML_COMMENT, ML_COMMENT_CONTENT);
+        return COMMENTS;
     }
 
     @NotNull

@@ -25,6 +25,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import me.piotrbuda.intellij.pony.parser.PonyLexer;
+import me.piotrbuda.intellij.pony.parser.PonyParserDefinition;
 import me.piotrbuda.intellij.pony.psi.PonyTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,6 +87,7 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey METHOD = createTextAttributesKey("METHOD", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
     public static final TextAttributesKey NUMBER = createTextAttributesKey("NUMBER", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey KEYWORD = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
+    public static final TextAttributesKey COMMENT =createTextAttributesKey("ML_COMMENT_CONTENT", DefaultLanguageHighlighterColors.DOC_COMMENT);
 
     private static final Set<IElementType> KEYWORDS = Sets.newHashSet(PONY_TYPE, PONY_INTERFACE, PONY_TRAIT, PONY_PRIMITIVE, PONY_CLASS, PONY_ACTOR, PONY_USE, PONY_IF,
             PONY_AT, PONY_LET, PONY_VAR, PONY_FUN, PONY_BE, PONY_NEW, PONY_RETURN, PONY_BREAK, PONY_CONTINUE, PONY_ERROR, PONY_COMPILER, PONY_AS, PONY_BINOP_LIT, PONY_THEN,
@@ -113,6 +115,8 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
             return pack(KEYWORD);
         } else if (tokenType == PonyTypes.INT || tokenType == PonyTypes.FLOAT) {
             return pack(NUMBER);
+        } else if (tokenType == PonyParserDefinition.ML_COMMENT || tokenType == PonyParserDefinition.ML_COMMENT_CONTENT) {
+            return pack(COMMENT);
         }
         return EMPTY;
     }
