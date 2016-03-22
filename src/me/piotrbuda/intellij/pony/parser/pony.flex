@@ -34,7 +34,7 @@ LSQUARE_NEW = "["
 RPAREN = ")"
 RSQUARE = "]"
 MINUS_NEW = "-"
-STRING = \" .* \"
+STRING = \".*\"
 BEGIN_RAWSEQ = "=>"
 BEGIN_TYPE = ":"
 DOTS = "."
@@ -88,11 +88,14 @@ PONY_REF = "ref"
 PONY_VAL = "val"
 PONY_BOX = "box"
 PONY_TAG = "tag"
+ML_COMMENT = \"\"\"
 
+%state YYDOC
 
 %%
 
 <YYINITIAL> {
+{ML_COMMENT} {yybegin(YYDOC); return ML_COMMENT;}
  {BEGIN_RAWSEQ} {return BEGIN_RAWSEQ;}
  {PONY_EQUALS} {return PONY_EQUALS;}
  {PONY_USE} {return PONY_USE;}
@@ -150,12 +153,21 @@ PONY_TAG = "tag"
  {LPAREN_NEW} {return LPAREN_NEW;}
  {LSQUARE_NEW} {return LSQUARE_NEW;}
  {MINUS_NEW} {return MINUS_NEW;}
- {STRING} {return STRING;}
  {BEGIN_TYPE} {return BEGIN_TYPE;}
  {RPAREN} {return RPAREN;}
  {RSQUARE} {return RSQUARE;}
  {DOTS} {return DOTS;}
+ {STRING} {return STRING;}
  {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
  . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
+<YYDOC> {
+ {ML_COMMENT} {yybegin(YYINITIAL); return ML_COMMENT;}
+ {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
+ .* {return ML_COMMENT_CONTENT;}
+ . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
+/* error fallback */
+[^] { throw new Error("Illegal character <"+yytext()+">"); }
