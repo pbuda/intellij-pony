@@ -26,6 +26,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import me.piotrbuda.intellij.pony.parser.PonyLexer;
 import me.piotrbuda.intellij.pony.parser.PonyParserDefinition;
+import me.piotrbuda.intellij.pony.psi.PonyTokenType;
 import me.piotrbuda.intellij.pony.psi.PonyTypes;
 import org.jetbrains.annotations.NotNull;
 

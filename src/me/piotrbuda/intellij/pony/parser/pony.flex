@@ -25,7 +25,7 @@ import static me.piotrbuda.intellij.pony.parser.PonyParserDefinition.*;
 %eof}
 
 CRLF= \n|\r|\r\n
-WHITE_SPACE=[\ \t\f] | {CRLF}
+WHITE_SPACE=[\ \t\f]
 FLOAT = [:digit:] "." [:digit:]
 ID = (_ | [:jletter:] | [:jletterdigit:])*
 INT = [:digit:]
@@ -89,6 +89,7 @@ PONY_VAL = "val"
 PONY_BOX = "box"
 PONY_TAG = "tag"
 ML_COMMENT = \"\"\"
+PONY_UNION = \|
 
 %state YYDOC
 
@@ -156,15 +157,18 @@ ML_COMMENT = \"\"\"
  {BEGIN_TYPE} {return BEGIN_TYPE;}
  {RPAREN} {return RPAREN;}
  {RSQUARE} {return RSQUARE;}
- {DOTS} {return DOTS;}
- {STRING} {return STRING;}
+ {DOTS} {return DOT;}
+ {STRING} {return LITERAL;}
+ {PONY_UNION} {return PONY_UNION;}
  {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
+ {CRLF}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
  . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <YYDOC> {
  {ML_COMMENT} {yybegin(YYINITIAL); return ML_COMMENT;}
  {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
+ {CRLF}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
  .* {return ML_COMMENT_CONTENT;}
  . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

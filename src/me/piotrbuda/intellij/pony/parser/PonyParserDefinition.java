@@ -100,6 +100,7 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType PONY_VAL = new PonyTokenType("PONY_VAL");
     public static final IElementType PONY_BOX = new PonyTokenType("PONY_BOX");
     public static final IElementType PONY_TAG = new PonyTokenType("PONY_TAG");
+    public static final IElementType PONY_UNION = new PonyTokenType("PONY_UNION");
     public static final IElementType ML_COMMENT = new PonyTokenType("ML_COMMENT");
     public static final IElementType ML_COMMENT_CONTENT = new PonyTokenType("ML_COMMENT_CONTENT");
 
