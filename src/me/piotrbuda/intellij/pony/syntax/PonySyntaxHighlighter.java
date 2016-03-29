@@ -41,7 +41,7 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey NUMBER = createTextAttributesKey("NUMBER", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey KEYWORD = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey ML_COMMENT =createTextAttributesKey("ML_COMMENT_CONTENT", DefaultLanguageHighlighterColors.DOC_COMMENT);
-    public static final TextAttributesKey SL_COMMENT =createTextAttributesKey("ML_COMMENT_CONTENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+    public static final TextAttributesKey SL_COMMENT =createTextAttributesKey("SL_COMMENT_CONTENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey CAP =createTextAttributesKey("CAP", DefaultLanguageHighlighterColors.KEYWORD);
 
     private static final Set<IElementType> KEYWORDS = Sets.newHashSet(PONY_CLASS_DEF, PONY_USE, PONY_IF,
