@@ -24,6 +24,8 @@ public class PonyLexerTest extends ParsingTestCase {
     }
 
     public void testStringAsMethodArg() {doTest(true);}
+    public void testLineComment() {doTest(true);}
+    public void testMultipleParamsMethod() {doTest(true);}
 
 
     @Override

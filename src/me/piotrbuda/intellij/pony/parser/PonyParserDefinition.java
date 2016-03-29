@@ -49,13 +49,7 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType BEGIN_TYPE = new PonyTokenType("BEGIN_TYPE");
     public static final IElementType RPAREN = new PonyTokenType("RPAREN");
     public static final IElementType RSQUARE = new PonyTokenType("RSQUARE");
-    public static final IElementType DOTS = new PonyTokenType("DOTS");
-    public static final IElementType PONY_TYPE = new PonyTokenType("PONY_TYPE");
-    public static final IElementType PONY_INTERFACE = new PonyTokenType("PONY_INTERFACE");
-    public static final IElementType PONY_TRAIT = new PonyTokenType("PONY_TRAIT");
-    public static final IElementType PONY_PRIMITIVE = new PonyTokenType("PONY_PRIMITIVE");
-    public static final IElementType PONY_CLASS = new PonyTokenType("PONY_CLASS");
-    public static final IElementType PONY_ACTOR = new PonyTokenType("PONY_ACTOR");
+    public static final IElementType PONY_CLASS_DEF = new PonyTokenType("PONY_CLASS_DEF");
     public static final IElementType PONY_USE = new PonyTokenType("PONY_USE");
     public static final IElementType PONY_IF = new PonyTokenType("PONY_IF");
     public static final IElementType PONY_AT = new PonyTokenType("PONY_AT");
@@ -63,16 +57,13 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType PONY_EQUALS = new PonyTokenType("PONY_EQUALS");
     public static final IElementType PONY_LET = new PonyTokenType("PONY_LET");
     public static final IElementType PONY_VAR = new PonyTokenType("PONY_VAR");
-    public static final IElementType PONY_FUN = new PonyTokenType("PONY_FUN");
-    public static final IElementType PONY_BE = new PonyTokenType("PONY_BE");
-    public static final IElementType PONY_NEW = new PonyTokenType("PONY_NEW");
+    public static final IElementType PONY_METHOD = new PonyTokenType("PONY_METHOD");
     public static final IElementType PONY_RETURN = new PonyTokenType("PONY_RETURN");
     public static final IElementType PONY_BREAK = new PonyTokenType("PONY_BREAK");
     public static final IElementType PONY_CONTINUE = new PonyTokenType("PONY_CONTINUE");
     public static final IElementType PONY_ERROR = new PonyTokenType("PONY_ERROR");
     public static final IElementType PONY_COMPILER = new PonyTokenType("PONY_COMPILER");
     public static final IElementType PONY_AS = new PonyTokenType("PONY_AS");
-    public static final IElementType PONY_BINOP_LIT = new PonyTokenType("PONY_BINOP_LIT");
     public static final IElementType PONY_THEN = new PonyTokenType("PONY_THEN");
     public static final IElementType PONY_ELSE = new PonyTokenType("PONY_ELSE");
     public static final IElementType PONY_END = new PonyTokenType("PONY_END");
@@ -94,17 +85,14 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType PONY_ELSEIF = new PonyTokenType("PONY_ELSEIF");
     public static final IElementType PONY_OBJECT = new PonyTokenType("PONY_OBJECT");
     public static final IElementType PONY_LAMBDA = new PonyTokenType("PONY_LAMBDA");
-    public static final IElementType PONY_ISO = new PonyTokenType("PONY_ISO");
-    public static final IElementType PONY_TRN = new PonyTokenType("PONY_TRN");
-    public static final IElementType PONY_REF = new PonyTokenType("PONY_REF");
-    public static final IElementType PONY_VAL = new PonyTokenType("PONY_VAL");
-    public static final IElementType PONY_BOX = new PonyTokenType("PONY_BOX");
-    public static final IElementType PONY_TAG = new PonyTokenType("PONY_TAG");
     public static final IElementType PONY_UNION = new PonyTokenType("PONY_UNION");
+    public static final IElementType PONY_OPERATOR = new PonyTokenType("PONY_OPERATOR");
+    public static final IElementType PONY_SEMICOLON = new PonyTokenType("PONY_SEMICOLON");
+    public static final IElementType PONY_COLON = new PonyTokenType("PONY_COLON");
     public static final IElementType ML_COMMENT = new PonyTokenType("ML_COMMENT");
     public static final IElementType ML_COMMENT_CONTENT = new PonyTokenType("ML_COMMENT_CONTENT");
 
-    public static final TokenSet COMMENTS = TokenSet.create(ML_COMMENT, ML_COMMENT_CONTENT);
+    public static final TokenSet COMMENTS = TokenSet.create(ML_COMMENT, ML_COMMENT_CONTENT, LINE_COMMENT);
 
     @NotNull
     @Override
