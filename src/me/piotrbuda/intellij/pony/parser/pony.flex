@@ -27,7 +27,7 @@ import static me.piotrbuda.intellij.pony.parser.PonyParserDefinition.*;
 CRLF= \n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 FLOAT = [:digit:]* "." [:digit:]*
-ID = (_ | [:jletter:] | [:jletterdigit:])*
+ID = (_ | [:jletter:] | [:jletterdigit:] | "\'")*
 INT = [:digit:]
 CLASS_DEF = "type" | "interface" | "trait" | "primitive" | "class" | "actor"
 BINOP = "and" | "or" | "xor" | "is" | "isnt"
@@ -48,7 +48,7 @@ LINE_COMMENT = "//".*?{CRLF}
  "@" {return PONY_AT;}
  "?" {return PONY_QUESTION;}
  "if" {return PONY_IF;}
-// "let" {return PONY_LET;}
+ "let" {return PONY_LET;}
  "var" {return PONY_VAR;}
  "fun" | "be" | "new" {return PONY_METHOD;}
  "return" {return PONY_RETURN;}
