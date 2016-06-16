@@ -16,6 +16,8 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
+import java.util.ArrayList;
+import java.util.List;
 import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,17 +27,18 @@ import org.jetbrains.jps.model.JpsDummyElement;
 import org.jetbrains.jps.model.JpsModel;
 import org.jetbrains.jps.model.module.JpsTypedModule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PonyTargetType extends ModuleBasedBuildTargetType<PonyTarget> {
 
-    public static final PonyTargetType PRODUCTION = new PonyTargetType("pony-production");
-    public static final PonyTargetType TESTS = new PonyTargetType("pony-tests");
+    public static final PonyTargetType PRODUCTION = new PonyTargetType("pony-production", false);
+    public static final PonyTargetType TESTS = new PonyTargetType("pony-tests", true);
 
-    private PonyTargetType(@NotNull final String pony) {
+    private final boolean isTests;
+
+    private PonyTargetType(@NotNull final String pony, boolean isTests) {
         super(pony);
+        this.isTests = isTests;
     }
+
 
     @NotNull
     @Override
@@ -62,5 +65,10 @@ public class PonyTargetType extends ModuleBasedBuildTargetType<PonyTarget> {
                 return null;
             }
         };
+    }
+
+    public boolean isTests()
+    {
+        return isTests;
     }
 }

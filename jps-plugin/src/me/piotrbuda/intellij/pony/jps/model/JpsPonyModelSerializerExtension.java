@@ -16,16 +16,16 @@
 
 package me.piotrbuda.intellij.pony.jps.model;
 
+import java.util.Collections;
+import java.util.List;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.JpsDummyElement;
 import org.jetbrains.jps.model.JpsElementFactory;
 import org.jetbrains.jps.model.serialization.JpsModelSerializerExtension;
+import org.jetbrains.jps.model.serialization.library.JpsSdkPropertiesSerializer;
 import org.jetbrains.jps.model.serialization.module.JpsModulePropertiesSerializer;
-
-import java.util.Collections;
-import java.util.List;
 
 public class JpsPonyModelSerializerExtension extends JpsModelSerializerExtension {
     @NotNull
@@ -39,6 +39,27 @@ public class JpsPonyModelSerializerExtension extends JpsModelSerializerExtension
 
             @Override
             public void saveProperties(@NotNull JpsDummyElement properties, @NotNull Element componentElement) {
+            }
+        });
+    }
+
+    @NotNull
+    @Override
+    public List<? extends JpsSdkPropertiesSerializer<?>> getSdkPropertiesSerializers()
+    {
+        return Collections.singletonList(new JpsSdkPropertiesSerializer<JpsDummyElement>("PONY_SDK", JpsPonySdkType.INSTANCE)
+        {
+            @NotNull
+            @Override
+            public JpsDummyElement loadProperties(@Nullable Element element)
+            {
+                return JpsElementFactory.getInstance().createDummyElement();
+            }
+
+            @Override
+            public void saveProperties(@NotNull JpsDummyElement jpsElement, @NotNull Element element)
+            {
+
             }
         });
     }
