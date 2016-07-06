@@ -89,10 +89,10 @@ public class PonyParserDefinition implements ParserDefinition {
     public static final IElementType PONY_OPERATOR = new PonyTokenType("PONY_OPERATOR");
     public static final IElementType PONY_SEMICOLON = new PonyTokenType("PONY_SEMICOLON");
     public static final IElementType PONY_COLON = new PonyTokenType("PONY_COLON");
-    public static final IElementType ML_COMMENT = new PonyTokenType("ML_COMMENT");
-    public static final IElementType ML_COMMENT_CONTENT = new PonyTokenType("ML_COMMENT_CONTENT");
+    public static final IElementType ML_STRING = new PonyTokenType("ML_STRING");
+    public static final IElementType ML_STRING_CONTENT = new PonyTokenType("ML_STRING_CONTENT");
 
-    public static final TokenSet COMMENTS = TokenSet.create(ML_COMMENT, ML_COMMENT_CONTENT, LINE_COMMENT);
+    public static final TokenSet COMMENTS = TokenSet.create(LINE_COMMENT);
 
     @NotNull
     @Override

@@ -40,7 +40,7 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey ID = createTextAttributesKey("ID", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey NUMBER = createTextAttributesKey("NUMBER", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey KEYWORD = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
-    public static final TextAttributesKey ML_COMMENT =createTextAttributesKey("ML_COMMENT_CONTENT", DefaultLanguageHighlighterColors.DOC_COMMENT);
+    public static final TextAttributesKey ML_STRING =createTextAttributesKey("ML_STRING", DefaultLanguageHighlighterColors.DOC_COMMENT);
     public static final TextAttributesKey SL_COMMENT =createTextAttributesKey("SL_COMMENT_CONTENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey CAP =createTextAttributesKey("CAP", DefaultLanguageHighlighterColors.KEYWORD);
 
@@ -68,8 +68,8 @@ public class PonySyntaxHighlighter extends SyntaxHighlighterBase {
             return pack(KEYWORD);
         } else if (tokenType == PonyTypes.INT || tokenType == PonyTypes.FLOAT) {
             return pack(NUMBER);
-        } else if (tokenType == PonyParserDefinition.ML_COMMENT || tokenType == PonyParserDefinition.ML_COMMENT_CONTENT) {
-            return pack(ML_COMMENT);
+        } else if (tokenType == PonyParserDefinition.ML_STRING || tokenType == PonyParserDefinition.ML_STRING_CONTENT) {
+            return pack(ML_STRING);
         } else if(tokenType == PonyParserDefinition.LINE_COMMENT) {
             return pack(SL_COMMENT);
         } else if(tokenType == PonyTypes.CAP) {

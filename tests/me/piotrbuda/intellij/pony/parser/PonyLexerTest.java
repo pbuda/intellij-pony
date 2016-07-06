@@ -23,9 +23,7 @@ public class PonyLexerTest extends ParsingTestCase {
         super("parser", "pony", new PonyParserDefinition());
     }
 
-    public void testStringAsMethodArg() {doTest(true);}
-    public void testLineComment() {doTest(true);}
-    public void testMultipleParamsMethod() {doTest(true);}
+    public void testSandbox() {doTest(true);}
 
 
     @Override

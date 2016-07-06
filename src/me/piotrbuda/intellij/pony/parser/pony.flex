@@ -25,7 +25,7 @@ import static me.piotrbuda.intellij.pony.parser.PonyParserDefinition.*;
 %eof}
 
 CRLF= \n|\r|\r\n
-WHITE_SPACE=[\ \t\f]
+WHITE_SPACE=[\ \t\f] | {CRLF}
 FLOAT = [:digit:]* "." [:digit:]*
 ID = (_ | [:jletter:] | [:jletterdigit:] | "\'")*
 INT = [:digit:]
@@ -33,15 +33,15 @@ CLASS_DEF = "type" | "interface" | "trait" | "primitive" | "class" | "actor"
 BINOP = "and" | "or" | "xor" | "is" | "isnt"
 OPERATORS = "+" | "-" | "*" | "/" | "%" | "<<" | ">>" | "==" | "!=" | "<" | "<=" | ">=" | ">"
 CAP = "iso" | "trn" | "ref" | "val" | "box" | "tag"
-ML_COMMENT = \"\"\"
+ML_STRING = \"{3}
 LINE_COMMENT = "//".*?{CRLF}
 
-%state YYDOC
+%state MLSTRING
 
 %%
 
 <YYINITIAL> {
- {ML_COMMENT} {yybegin(YYDOC); return ML_COMMENT;}
+ {ML_STRING} {yybegin(MLSTRING); return ML_STRING;}
  "=>" {return BEGIN_RAWSEQ;}
  "=" {return PONY_EQUALS;}
  "use" {return PONY_USE;}
@@ -97,16 +97,12 @@ LINE_COMMENT = "//".*?{CRLF}
  {FLOAT} {return FLOAT;}
  {ID} {return ID;}
  {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
- {CRLF}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
  . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
-<YYDOC> {
- {ML_COMMENT} {yybegin(YYINITIAL); return ML_COMMENT;}
- {WHITE_SPACE}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
- {CRLF}+  { return com.intellij.psi.TokenType.WHITE_SPACE; }
- .* {return ML_COMMENT_CONTENT;}
- . { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+<MLSTRING> {
+  {ML_STRING} {yybegin(YYINITIAL); return ML_STRING;}
+  [^\"\"\"]* {return ML_STRING_CONTENT;}
 }
 
 /* error fallback */
