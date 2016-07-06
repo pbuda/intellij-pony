@@ -16,21 +16,25 @@
 
 package me.piotrbuda.intellij.pony.sdk;
 
+import java.io.File;
 import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.util.SystemInfo;
 import me.piotrbuda.intellij.pony.util.CommandLine;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-
 public class PonySdkType extends SdkType {
     public static final String PONY_SDK_TYPE_ID = "PONY_SDK";
+
+    private static final String PONYC_FILE_NIX = "/bin/ponyc";
+    private static final String PONYC_FILE_WIN = "\\bin\\ponyc.exe";
+    private static final String PONYC_RELATIVE_FILEPATH = SystemInfo.isWindows ? PONYC_FILE_WIN : PONYC_FILE_NIX;
 
     public static PonySdkType getInstance() {
         return SdkType.findInstance(PonySdkType.class);
@@ -51,7 +55,7 @@ public class PonySdkType extends SdkType {
     @Override
     public boolean isValidSdkHome(final String s) {
         //TODO: make sure to make it work with symlinks (/usr/local/bin/ponyc vs /usr/local/Cellar/ponyc/0.1.7)
-        return new File(s + "/bin/ponyc").exists();
+        return new File(s, PONYC_RELATIVE_FILEPATH).exists();
     }
 
     @Override
@@ -79,7 +83,8 @@ public class PonySdkType extends SdkType {
     @Nullable
     @Override
     public String getVersionString(final String sdkHome) {
-        return CommandLine.execute("ponyc --version");
+        File execFullPath = new File(sdkHome, PONYC_RELATIVE_FILEPATH);
+        return CommandLine.execute(execFullPath.getAbsolutePath() + " --version");
     }
 
     @Override

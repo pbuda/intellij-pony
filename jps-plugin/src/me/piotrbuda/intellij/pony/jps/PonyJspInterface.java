@@ -16,13 +16,19 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
-import com.intellij.execution.ExecutionException;
+import java.io.File;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.SystemInfo;
+import me.piotrbuda.intellij.pony.jps.model.JpsPonySdkType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.ProjectBuildException;
-
-import java.io.File;
+import org.jetbrains.jps.incremental.messages.BuildMessage;
+import org.jetbrains.jps.incremental.messages.CompilerMessage;
+import org.jetbrains.jps.model.JpsDummyElement;
+import org.jetbrains.jps.model.library.sdk.JpsSdk;
+import org.jetbrains.jps.model.module.JpsModule;
 
 public class PonyJspInterface {
 
@@ -30,22 +36,27 @@ public class PonyJspInterface {
 
     @NotNull
     private final File rootDir;
+    private final File compilerFileName;
 
-    PonyJspInterface(@NotNull final File rootDir) {
-        this.rootDir = rootDir;
+    PonyJspInterface(@NotNull JpsModule module, @NotNull CompileContext context) throws ProjectBuildException {
+        final String moduleRoot = module.getContentRootsList().getUrls().get(0).substring("file://".length());
+        this.rootDir = new File(moduleRoot);
+        JpsSdk<JpsDummyElement> sdk = module.getSdk(JpsPonySdkType.INSTANCE);
+        if (sdk == null)
+        {
+            String errorMessage = "No SDK for module " + module.getName();
+            context.processMessage(new CompilerMessage("PonyBuilder", BuildMessage.Kind.ERROR, errorMessage));
+            throw new ProjectBuildException(errorMessage);
+        }
+        compilerFileName = new File(sdk.getHomePath(), SystemInfo.isWindows ? "\\bin\\ponyc.exe" : "/bin/ponyc");
     }
 
-    public Process runBuild(@NotNull final File outputDirectory) throws ProjectBuildException {
-        try {
-            final GeneralCommandLine commandLine = new GeneralCommandLine();
-            commandLine.withWorkDirectory(rootDir.getPath());
-            commandLine.setRedirectErrorStream(true);
-            commandLine.setExePath("ponyc");
-            commandLine.addParameter("--output=" + outputDirectory.getPath());
-            return commandLine.createProcess();
-        } catch (ExecutionException e) {
-            LOG.warn("Error executing Pony compiler", e);
-            throw new ProjectBuildException("Failed to launch Pony compiler");
-        }
+    public GeneralCommandLine buildCommandLine(@NotNull final File outputDirectory) throws ProjectBuildException {
+        final GeneralCommandLine commandLine = new GeneralCommandLine();
+        commandLine.withWorkDirectory(rootDir.getPath());
+        commandLine.setRedirectErrorStream(true);
+        commandLine.setExePath(compilerFileName.getAbsolutePath());
+        commandLine.addParameter("--output=" + outputDirectory.getPath());
+        return commandLine;
     }
 }

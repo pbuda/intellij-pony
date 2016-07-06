@@ -16,11 +16,21 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import com.intellij.util.containers.ContainerUtil;
 import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.builders.*;
+import org.jetbrains.jps.builders.BuildRootIndex;
+import org.jetbrains.jps.builders.BuildTarget;
+import org.jetbrains.jps.builders.BuildTargetRegistry;
+import org.jetbrains.jps.builders.ModuleBasedTarget;
+import org.jetbrains.jps.builders.TargetOutputIndex;
 import org.jetbrains.jps.builders.storage.BuildDataPaths;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.indices.IgnoredFileIndex;
@@ -33,9 +43,6 @@ import org.jetbrains.jps.model.java.JpsJavaExtensionService;
 import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.model.module.JpsTypedModuleSourceRoot;
 
-import java.io.File;
-import java.util.*;
-
 public class PonyTarget extends ModuleBasedTarget<PonySourceRootDescriptor> {
 
     public PonyTarget(@NotNull final JpsModule jpsModule, @NotNull final PonyTargetType ponyTargetType) {
@@ -44,7 +51,7 @@ public class PonyTarget extends ModuleBasedTarget<PonySourceRootDescriptor> {
 
     @Override
     public boolean isTests() {
-        return false;
+        return getPonyTargetType().isTests();
     }
 
     @Override
@@ -60,6 +67,9 @@ public class PonyTarget extends ModuleBasedTarget<PonySourceRootDescriptor> {
             if (module.getModuleType().equals(JpsPonyModuleType.INSTANCE)) {
                 dependencies.add(new PonyTarget(module, getPonyTargetType()));
             }
+        }
+        if (isTests()) {
+            dependencies.add(new PonyTarget(myModule, PonyTargetType.PRODUCTION));
         }
         return dependencies;
     }

@@ -16,7 +16,19 @@
 
 package me.piotrbuda.intellij.pony.jps;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.process.BaseOSProcessHandler;
+import com.intellij.execution.process.ProcessEvent;
+import com.intellij.execution.process.ProcessListener;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import me.piotrbuda.intellij.pony.jps.model.JpsPonyModuleType;
 import org.jetbrains.annotations.NotNull;
@@ -32,10 +44,6 @@ import org.jetbrains.jps.incremental.resources.ResourcesBuilder;
 import org.jetbrains.jps.incremental.resources.StandardResourceBuilderEnabler;
 import org.jetbrains.jps.model.java.JpsJavaExtensionService;
 import org.jetbrains.jps.model.module.JpsModule;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 
 public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTarget> {
 
@@ -65,20 +73,26 @@ public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTar
         System.out.println(target.getOutputRoots(compileContext));
         File outputDirectory = getBuildOutputDirectory(target.getModule(), false, compileContext);
         compileContext.processMessage(new ProgressMessage("Compiling Pony sources"));
-        runPonyc(target.getModule(), outputDirectory);
+        runPonyc(target.getModule(), outputDirectory, compileContext);
         compileContext.checkCanceled();
         compileContext.processMessage(new ProgressMessage(""));
     }
 
-    private void runPonyc(@NotNull final JpsModule module, @NotNull final File outputDirectory) throws ProjectBuildException {
-        final String moduleRoot = module.getContentRootsList().getUrls().get(0).substring("file://".length());
-        final PonyJspInterface pony = new PonyJspInterface(new File(moduleRoot));
-        Process process = pony.runBuild(outputDirectory);
+    private void runPonyc(@NotNull final JpsModule module, @NotNull final File outputDirectory, @NotNull CompileContext compileContext) throws ProjectBuildException
+    {
+
+        final PonyJspInterface pony = new PonyJspInterface(module, compileContext);
+        GeneralCommandLine commandLine = pony.buildCommandLine(outputDirectory);
+        Process process = null;
         try {
-            process.waitFor();
-        } catch (InterruptedException e) {
-            LOG.error("Error during ponyc invocation - interrupted");
+            process = commandLine.createProcess();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+        BaseOSProcessHandler handler = new BaseOSProcessHandler(process, commandLine.getCommandLineString(), Charset.defaultCharset());
+        handler.addProcessListener(new PonyCProcessListener(compileContext));
+        handler.startNotify();
+        handler.waitFor();
     }
 
     @NotNull
@@ -96,5 +110,69 @@ public class PonyBuilder extends TargetBuilder<PonySourceRootDescriptor, PonyTar
             FileUtil.createDirectory(outputDirectory);
         }
         return outputDirectory;
+    }
+
+    private static class PonyCProcessListener implements ProcessListener {
+
+        private static final Pattern ERROR_LOCATION_PATTERN = Pattern.compile("(.*):(\\d+):(\\d+): (.*)");
+
+        enum ParsingState {
+            START,
+            ERROR_FOUND,
+            ERROR_LOCATION,
+            ERROR_LINE_QUOTE,
+        }
+
+        private final CompileContext compileContext;
+        private ParsingState parsingState = ParsingState.START;
+
+        public PonyCProcessListener(@NotNull CompileContext compileContext) {
+            this.compileContext = compileContext;
+        }
+
+        @Override
+        public void startNotified(@NotNull ProcessEvent event) {
+            parsingState = ParsingState.START;
+        }
+
+        @Override
+        public void processTerminated(@NotNull ProcessEvent event) {
+            parsingState = ParsingState.START;
+        }
+
+        @Override
+        public void processWillTerminate(@NotNull ProcessEvent event, boolean b) {
+        }
+
+        @Override
+        public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key key) {
+            String line = event.getText();
+            switch (parsingState) {
+                case START:
+                    if (line.startsWith("Error:")) {
+                        parsingState = ParsingState.ERROR_FOUND;
+                    }
+                    break;
+                case ERROR_FOUND:
+                    Matcher matcher = ERROR_LOCATION_PATTERN.matcher(line);
+                    if (matcher.find()) {
+                        String sourcePath = matcher.group(1);
+                        long lineNo = Long.parseLong(matcher.group(2));
+                        long columnNo = Long.parseLong(matcher.group(3));
+                        String errorMessage = matcher.group(4);
+                        compileContext.processMessage(new CompilerMessage("ponyc", BuildMessage.Kind.ERROR, errorMessage, sourcePath, -1, -1, -1, lineNo, columnNo));
+                        parsingState = ParsingState.ERROR_LOCATION;
+                    }
+                    break;
+                case ERROR_LOCATION:
+                    parsingState = ParsingState.ERROR_LINE_QUOTE;
+                    break;
+                case ERROR_LINE_QUOTE:
+                    if (line.contains("^")) {
+                        parsingState = ParsingState.START;
+                    }
+                    break;
+            }
+        }
     }
 }

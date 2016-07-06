@@ -16,30 +16,39 @@
 
 package me.piotrbuda.intellij.pony.util;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.openapi.util.SystemInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CommandLine {
     @Nullable
     public static String execute(@NotNull final String command) {
         final GeneralCommandLine commandLine = new GeneralCommandLine();
         commandLine.setPassParentEnvironment(true);
-        commandLine.setExePath("/bin/sh");
-        commandLine.addParameter("-c");
+        if (SystemInfo.isWindows) {
+            commandLine.setExePath("cmd.exe");
+            commandLine.addParameter("/c");
+        } else {
+            commandLine.setExePath("/bin/sh");
+            commandLine.addParameter("-c");
+        }
         commandLine.addParameter(command);
         final Process process;
         try {
             process = commandLine.createProcess();
             final InputStream inputStream = process.getInputStream();
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            return bufferedReader.readLine();
+            try {
+                final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                return bufferedReader.readLine();
+            } finally {
+                inputStream.close();
+            }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (IOException e) {
